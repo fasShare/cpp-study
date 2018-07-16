@@ -36,5 +36,8 @@ int main(int argc, char** atgv) {
     std::cout << "从小到大排序后:";PrintVector(seq);
     std::qsort(seq.data(), seq.size(), sizeof(int), greater);
     std::cout << "从大到小排序后:";PrintVector(seq);
+
+    std::sort(seq.begin(), seq.end());
+    std::cout << "从小到大排序后:";PrintVector(seq);
     return 0;
 }
