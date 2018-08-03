@@ -10,7 +10,7 @@ public:
     int a;
     int b;
     char c;
-    int d;
+    long d;
 };
 
 class vtest {
@@ -42,6 +42,8 @@ struct dtc : dtb {
 };
 
 void TestClassVariablePtr() {
+    std::cout << "align of test:" << alignof(test) << std::endl;
+    
     std::cout << offsetof(test, a) << std::endl;
     std::cout << offsetof(test, b) << std::endl;
     std::cout << offsetof(test, c) << std::endl;
@@ -62,7 +64,8 @@ void TestClassVariablePtr() {
     std::cout << "bptr = " << VALUE_OF_PTR(ptr) << std::endl; // 4
     char test::*cptr = &test::c; 
     std::cout << "cptr = " << VALUE_OF_PTR(cptr) << std::endl; // 8
-    ptr = &test::d;
+    long test::*lptr = nullptr;
+    lptr = &test::d;
     std::cout << "dptr = " << VALUE_OF_PTR(ptr) << std::endl; // 12 ，按4字节对齐
     
 

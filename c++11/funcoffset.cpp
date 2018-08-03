@@ -10,16 +10,23 @@
 class funcTest {
 public:
     void ftest() { }
+    static void stest() {}
 };
 
 void TestClassFuncPtr() {
     void (funcTest::*pftest)() = &funcTest::ftest;
+    // 静态函数并被编译器识别为类相关的，而是普通的函数指针
+    void (*pstest)() = &funcTest::stest;
     // 16个字节的, 存储的内容主要有一下两个
     // 一个真想真正的函数地址，类似于C语言的普通函数地址
     // 一个adjustoffset，多数情况下会是0，这个会在多继承的情况下出现值差异，见博客：https://blog.csdn.net/u010154685/article/details/54755449
     std::cout << "sizeof pftest = " << sizeof(pftest) << std::endl; 
     std::cout << "true func ptr = " << FUNCPTR_OF_PTR(pftest) << std::endl;
     std::cout << "adjustoffset ptr = " << OFFSET_OF_PTR(pftest) << std::endl;
+
+    std::cout << "sizeof pstest = " << sizeof(pstest) << std::endl; // 8
+    std::cout << "true func ptr = " << FUNCPTR_OF_PTR(pstest) << std::endl;
+    std::cout << "adjustoffset ptr = " << OFFSET_OF_PTR(pstest) << std::endl;
 }
 
 class baseA {
@@ -31,7 +38,7 @@ public:
         a = 11;
     }
 
-    long long a;
+    int a; 
 };
 
 class baseB {
@@ -66,9 +73,20 @@ typedef void (*void_baseA_void)(baseA*);
 typedef void (*void_baseB_void)(baseB*);
 typedef void (*void_baseC_void)(baseC*);
 void TestVirtualFuncPtr() {
+    std::cout << "align of char :" << alignof(char) << std::endl;
+    std::cout << "align of short :" << alignof(short) << std::endl;
+    std::cout << "align of int :" << alignof(int) << std::endl;
+    std::cout << "align of long :" << alignof(long) << std::endl;
+    std::cout << "align of long long :" << alignof(long long) << std::endl;
+    std::cout << "align of float :" << alignof(float) << std::endl;
+    std::cout << "align of double :" << alignof(double) << std::endl;    
+
+    std::cout << "-------------------------------------------------" << std::endl;
+
+    // 存在对齐问题，见上面不同类型所要求的对齐字节数。
     void (derived::*testBaseA)() = &derived::testBaseA;         // ptr = 1, offset = 0
-    void (derived::*testBaseB)() = &derived::testBaseB;         // ptr = 1, offset = 8
-    void (derived::*testBaseC)() = &derived::testBaseC;         // ptr = 1, offset = 16
+    void (derived::*testBaseB)() = &derived::testBaseB;         // ptr = 1, offset = 16
+    void (derived::*testBaseC)() = &derived::testBaseC;         // ptr = 1, offset = 32
     void (derived::*testDerived)() = &derived::testDerived;     // ptr = 9, offset = 0
 
     // ptr之所以取1是为了区别与为0的空指针。
@@ -132,7 +150,8 @@ void TestVirtualFuncPtr2() {
 
 int main () {
     //TestClassFuncPtr();     // 没有虚函数时，函数指针与ptr
-    TestVirtualFuncPtr();
-    TestVirtualFuncPtr2();
-    std::cout << sizeof(derived) << std::endl;
+    //TestVirtualFuncPtr();
+    //TestVirtualFuncPtr2();
+    //std::cout << sizeof(derived) << std::endl;
+    TestClassFuncPtr();
 }
