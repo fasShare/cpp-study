@@ -28,11 +28,11 @@ void moxie::ListenHadler::Process(const std::shared_ptr<PollerEvent>& event, Eve
 void moxie::ListenHadler::DoListen(const std::shared_ptr<PollerEvent>& event, EventLoop *loop) {
     LOGGER_TRACE("Begin ListenHadler DoListen!");
     int event_fd = event->GetFd();
-begin:
+AcceptAgain:
     int ret = Socket::Accept(event_fd, true);
     if (ret < 0) {
         if (errno == EINTR) {
-            goto begin;
+            goto AcceptAgain;
         } else if (errno == EAGAIN || errno == EWOULDBLOCK) {
             return;
         } else {
@@ -51,8 +51,9 @@ begin:
 
     client->DisableWrite();
 
-    if (!loop->Register(client, std::make_shared<ClientHandler>())) {
-        ::close(ret);
-        return;
+    try {
+        this->AfterAcceptSuccess(client, loop);
+    } catch (...) {
+        LOGGER_WARN("AfterAccept has an exception!");
     }
 }

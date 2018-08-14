@@ -6,15 +6,16 @@
 
 namespace moxie {
 
-class ClientHandler : public Handler{
+class ClientHandler : virtual public Handler{
 public:
     ClientHandler();
     virtual ~ClientHandler() { LOGGER_TRACE("~ClientHandler"); }
     virtual void Process(const std::shared_ptr<PollerEvent>& event, EventLoop *loop);
-    void DoRead(const std::shared_ptr<PollerEvent>& event, EventLoop *loop);
-    void DoWrite(const std::shared_ptr<PollerEvent>& event, EventLoop *loop);
-
-private:
+    virtual void DoRead(const std::shared_ptr<PollerEvent>& event, EventLoop *loop);
+    virtual void DoWrite(const std::shared_ptr<PollerEvent>& event, EventLoop *loop);
+    virtual void AfetrRead(const std::shared_ptr<PollerEvent>& event, EventLoop *loop) = 0;
+    virtual void AfetrWrite(const std::shared_ptr<PollerEvent>& event, EventLoop *loop) = 0;
+protected:
     Buffer readBuf_;
     Buffer writeBuf_;
 };

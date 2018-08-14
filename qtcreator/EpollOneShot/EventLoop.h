@@ -26,7 +26,7 @@ public:
     bool Modity(const std::shared_ptr<PollerEvent>&  event);
     bool Delete(const std::shared_ptr<PollerEvent>& event);
     void Loop();
-    void quit();
+    void Quit();
 private:
     struct EventContext {
         int fd;

@@ -4,11 +4,12 @@
 
 namespace moxie {
 
-class ListenHadler : public Handler {
+class ListenHadler : virtual public Handler {
 public:
     virtual ~ListenHadler() {}
     virtual void Process(const std::shared_ptr<PollerEvent>& event, EventLoop *loop);
-    void DoListen(const std::shared_ptr<PollerEvent>& event, EventLoop *loop);
+    virtual void DoListen(const std::shared_ptr<PollerEvent>& event, EventLoop *loop);
+    virtual void AfterAcceptSuccess(const std::shared_ptr<PollerEvent>& event, EventLoop *loop) = 0;
 };
 
 }

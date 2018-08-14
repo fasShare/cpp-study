@@ -4,9 +4,11 @@
 #include <EventLoop.h>
 #include <Log.h>
 
+#define TMP_BUF_SIZE 512
+
 moxie::ClientHandler::ClientHandler() :
-    readBuf_(512),
-    writeBuf_(512) {
+    readBuf_(TMP_BUF_SIZE),
+    writeBuf_(TMP_BUF_SIZE) {
 }
 
 void moxie::ClientHandler::Process(const std::shared_ptr<PollerEvent>& event, EventLoop *loop) {
@@ -19,35 +21,24 @@ void moxie::ClientHandler::Process(const std::shared_ptr<PollerEvent>& event, Ev
 
     if (event->ValatileWriteEvent()) {
         DoWrite(event, loop);
-        if (writeBuf_.readableBytes() <= 0) {
-            event->DisableWrite();
-            loop->Modity(event);
-        }
     }
 
     if (event->ValatileReadEvent()) {
         DoRead(event, loop);
-        // FIXME : write condition
-        if (readBuf_.readableBytes() > 0) {
-            writeBuf_.append(readBuf_.peek(), readBuf_.readableBytes());
-            readBuf_.retrieveAll();
-            event->EnableWrite();
-            loop->Modity(event);
-        }
     }
 }
 
 void moxie::ClientHandler::DoRead(const std::shared_ptr<PollerEvent>& event, EventLoop *loop) {
     LOGGER_TRACE("Begin ClientHandler DoRead!");
     int event_fd = event->GetFd();
-    char buf[128];
+    char buf[TMP_BUF_SIZE];
     while (true) {
-        int ret = read(event_fd, buf, 127);
+        int ret = read(event_fd, buf, TMP_BUF_SIZE - 1);
         if (ret < 0) {
             if (errno == EINTR) {
                 continue;
             } else if (errno == EAGAIN || errno == EWOULDBLOCK) {
-                return;
+                goto AfterReadLabel;
             } else {
                 loop->Delete(event);
                 ::close(event_fd);
@@ -63,6 +54,15 @@ void moxie::ClientHandler::DoRead(const std::shared_ptr<PollerEvent>& event, Eve
 
         readBuf_.append(buf, ret);
     }
+
+AfterReadLabel:
+    if (readBuf_.readableBytes() > 0) {
+        try {
+            this->AfetrRead(event, loop);
+        } catch (...) {
+            LOGGER_WARN("AfetrRead has an exception!");
+        }
+    }
 }
 
 void moxie::ClientHandler::DoWrite(const std::shared_ptr<PollerEvent>& event, EventLoop *loop) {
@@ -75,7 +75,7 @@ void moxie::ClientHandler::DoWrite(const std::shared_ptr<PollerEvent>& event, Ev
             if (errno == EINTR) {
                 continue;
             } else if (errno == EAGAIN || errno == EWOULDBLOCK) {
-                return;
+                goto AfterWriteLabel;
             } else {
                 loop->Delete(event);
                 ::close(event_fd);
@@ -91,5 +91,12 @@ void moxie::ClientHandler::DoWrite(const std::shared_ptr<PollerEvent>& event, Ev
 
         len -= ret;
         writeBuf_.retrieve(ret);
+    }
+
+AfterWriteLabel:
+    try {
+        this->AfetrWrite(event, loop);
+    } catch (...) {
+        LOGGER_WARN("AfetrWrite has an exception!");
     }
 }

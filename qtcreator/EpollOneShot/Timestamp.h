@@ -10,15 +10,15 @@ class Timestamp {
 public:
     Timestamp();
     explicit Timestamp(int64_t microSecondsSinceEpoch);
-    void swap(Timestamp& that);
-    string toString() const;
-    string toFormattedString() const;
-    static Timestamp invalid();
-    bool isvalid() const;
+    void Swap(Timestamp& that);
+    string ToString() const;
+    string ToFormattedString() const;
+    static Timestamp Invalid();
+    bool Isvalid() const;
     // for internal usage.
-    int64_t get_microSecondsSinceEpoch() const;
-    time_t secondsSinceEpoch() const;
-    static Timestamp now();
+    int64_t GetMicroSecondsSinceEpoch() const;
+    time_t SecondsSinceEpoch() const;
+    static Timestamp Now();
     static const int kMicroSecondsPerSecond = 1000 * 1000;
 private:
     int64_t microSecondsSinceEpoch_;
@@ -28,8 +28,8 @@ private:
 bool operator<(Timestamp lhs, Timestamp rhs);
 bool operator>(Timestamp lhs, Timestamp rhs);
 bool operator==(Timestamp lhs, Timestamp rhs);
-double timeDifference(Timestamp high, Timestamp low);
-Timestamp addTime(Timestamp timestamp, double seconds);
+double TimeDifference(Timestamp high, Timestamp low);
+Timestamp AddTime(Timestamp timestamp, double seconds);
 
 }
 #endif  // MOXIE_TIMESTAMP_H

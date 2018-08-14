@@ -15,7 +15,7 @@ moxie::Timestamp::Timestamp(int64_t microseconds) :
     microSecondsSinceEpoch_(microseconds) {
 }
 
-std::string moxie::Timestamp::toString() const {
+std::string moxie::Timestamp::ToString() const {
     char buf[32] = {0};
     int64_t seconds = microSecondsSinceEpoch_ / kMicroSecondsPerSecond;
     int64_t microseconds = microSecondsSinceEpoch_ % kMicroSecondsPerSecond;
@@ -23,7 +23,7 @@ std::string moxie::Timestamp::toString() const {
     return buf;
 }
 
-std::string moxie::Timestamp::toFormattedString() const {
+std::string moxie::Timestamp::ToFormattedString() const {
     char buf[32] = {0};
     time_t seconds = static_cast<time_t>(microSecondsSinceEpoch_ / kMicroSecondsPerSecond);
     int microseconds = static_cast<int>(microSecondsSinceEpoch_ % kMicroSecondsPerSecond);
@@ -37,51 +37,51 @@ std::string moxie::Timestamp::toFormattedString() const {
     return buf;
 }
 
-moxie::Timestamp moxie::Timestamp::now() {
+moxie::Timestamp moxie::Timestamp::Now() {
     struct timeval tv;
     gettimeofday(&tv, NULL);
     int64_t seconds = tv.tv_sec;
     return moxie::Timestamp(seconds * kMicroSecondsPerSecond + tv.tv_usec);
 }
 
-moxie::Timestamp moxie::Timestamp::invalid() {
+moxie::Timestamp moxie::Timestamp::Invalid() {
     return Timestamp();
 }
 
-bool moxie::Timestamp::isvalid() const {
+bool moxie::Timestamp::Isvalid() const {
     return microSecondsSinceEpoch_ > 0;
 }
 
-void moxie::Timestamp::swap(Timestamp& that) {
+void moxie::Timestamp::Swap(Timestamp& that) {
     std::swap(microSecondsSinceEpoch_, that.microSecondsSinceEpoch_);
 }
 
-int64_t moxie::Timestamp::get_microSecondsSinceEpoch() const {
+int64_t moxie::Timestamp::GetMicroSecondsSinceEpoch() const {
     return microSecondsSinceEpoch_;
 }
 
-time_t moxie::Timestamp::secondsSinceEpoch() const {
+time_t moxie::Timestamp::SecondsSinceEpoch() const {
     return static_cast<time_t>(microSecondsSinceEpoch_ / kMicroSecondsPerSecond);
 }
 
 bool moxie::operator<(Timestamp lhs, Timestamp rhs) {
-    return lhs.get_microSecondsSinceEpoch() < rhs.get_microSecondsSinceEpoch();
+    return lhs.GetMicroSecondsSinceEpoch() < rhs.GetMicroSecondsSinceEpoch();
 }
 
 bool moxie::operator>(Timestamp lhs, Timestamp rhs) {
-    return lhs.get_microSecondsSinceEpoch() > rhs.get_microSecondsSinceEpoch();
+    return lhs.GetMicroSecondsSinceEpoch() > rhs.GetMicroSecondsSinceEpoch();
 }
 
 bool moxie::operator==(Timestamp lhs, Timestamp rhs) {
-    return lhs.get_microSecondsSinceEpoch() == rhs.get_microSecondsSinceEpoch();
+    return lhs.GetMicroSecondsSinceEpoch() == rhs.GetMicroSecondsSinceEpoch();
 }
 
-double moxie::timeDifference(Timestamp high, Timestamp low) {
-    int64_t diff = high.get_microSecondsSinceEpoch() - low.get_microSecondsSinceEpoch();
+double moxie::TimeDifference(Timestamp high, Timestamp low) {
+    int64_t diff = high.GetMicroSecondsSinceEpoch() - low.GetMicroSecondsSinceEpoch();
     return static_cast<double>(diff) / Timestamp::kMicroSecondsPerSecond;
 }
 
-moxie::Timestamp moxie::addTime(Timestamp timestamp, double seconds) {
+moxie::Timestamp moxie::AddTime(Timestamp timestamp, double seconds) {
     int64_t delta = static_cast<int64_t>(seconds * Timestamp::kMicroSecondsPerSecond);
-    return Timestamp(timestamp.get_microSecondsSinceEpoch() + delta);
+    return Timestamp(timestamp.GetMicroSecondsSinceEpoch() + delta);
 }

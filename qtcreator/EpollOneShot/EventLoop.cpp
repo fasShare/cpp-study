@@ -107,6 +107,6 @@ void moxie::EventLoop::Loop() {
     }
 }
 
-void moxie::EventLoop::quit() {
+void moxie::EventLoop::Quit() {
     quit_ = true;
 }
