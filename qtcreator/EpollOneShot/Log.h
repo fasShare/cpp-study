@@ -1,6 +1,8 @@
 #ifndef MOXIE_LOG_H
 #define MOXIE_LOG_H
 #include <iostream>
+#include <string.h>
+#include <errno.h>
 
 namespace moxie {
 

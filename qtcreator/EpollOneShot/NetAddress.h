@@ -7,10 +7,6 @@
 
 namespace moxie {
 
-/*!
- * \brief The NetAddress class
- * Encapsulation of struct sockaddr_in
- */
 class NetAddress {
 public:
     NetAddress(ushort sa_family = AF_INET, int sa_port = 8899, const char *sa_ip = "127.0.0.1");
