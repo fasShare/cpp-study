@@ -34,6 +34,7 @@ private:
         std::shared_ptr<Handler> handle;
     };
 private:
+    Mutex mutex_;
     Epoll *epoll_;
     std::unordered_map<int, EventContext*> contexts_;
     bool quit_;

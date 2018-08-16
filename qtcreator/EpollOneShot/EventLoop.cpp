@@ -94,6 +94,8 @@ void moxie::EventLoop::Loop() {
             assert(pet->data.ptr);
             pcontext = static_cast<EventContext *>(pet->data.ptr);
             assert(pcontext);
+            assert(pcontext->handle);
+            assert(pcontext->event);
 
             cur = pcontext->event;
             cur->SetValatileEvents(pet->events);

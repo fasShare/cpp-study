@@ -94,6 +94,7 @@ void RightRotate(TreeNode* &root) {
     root = right;
 }
 
+// 调节root的平衡，返回调节平衡后root的高度
 int AdjustNodeBlance(TreeNode* &root) {
     if (!root) {
         return 0;
@@ -123,6 +124,7 @@ int AdjustNodeBlance(TreeNode* &root) {
         }
     } else {
         assert(root->_right);
+
         int right_left_height = root->_right->_left ? root->_right->_left->_height : 0;
         int right_right_height = root->_right->_right ? root->_right->_right->_height : 0;
 
@@ -249,7 +251,7 @@ bool IsBlanceTree(TreeNode *root) {
     return __IsBlanceTree(root) == -1 ? false : true;
 }
 
-// 中序遍历节点值递增
+// 中序遍历节点值递增，约定：空节点本身就是二分查找树
 static bool __IsBinarySearchTree(TreeNode* root, int& lastVal, bool& isfirst) {
     // 空节点不更新lastVal和isfirst，直接返回true
     if (!root) {
@@ -327,7 +329,7 @@ TreeNode *FindPreInBinarySearchTree(TreeNode *root, int pre) {
     return prenode;
 }
 
-// 最近公共祖先
+// 最近公共祖先，如果left或则right不存在将会返回指向存在节点的node指针
 TreeNode *LowestCommonAncestor(TreeNode *root, int left, int right) {
     if (!root) {
         return root;
@@ -360,7 +362,6 @@ int main()
 
     ShowTree(node);
 
-
     std::cout << "tree height:" << TreeHeight(node) << std::endl;
     std::cout << "is blance tree:" << IsBlanceTree(node) << std::endl;
     std::cout << "is binary tree:" << IsBinarySearchTree(node) << std::endl;
@@ -375,7 +376,7 @@ int main()
         std::cout << "pre data:" << pre->_data << std::endl;
     }
 
-    TreeNode *lca = LowestCommonAncestor(node, 0, 6);
+    TreeNode *lca = LowestCommonAncestor(node, 0, -1);
     if (lca) {
         std::cout << "lca:" << lca->_data << std::endl;
     }
