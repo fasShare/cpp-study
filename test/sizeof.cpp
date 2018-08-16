@@ -1,25 +1,23 @@
-#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
 
-int main() {
-    int * pr = new int[20];
+#define elem_sizeof(T) ((size_t)((T*)0 + 1))
 
-    std::cout << "sizeof pr = " << sizeof(pr) << std::endl;
+#define array_sizeof(T) ((size_t)(&T+1)-(size_t)(&T))
 
-    int ar[20];
+int main(int argc, char *argv[]) {
+    int n;
+   
+    scanf("%d",&n);
 
-    std::cout << "sizeof pr = " << sizeof(ar) << std::endl;
+    int arr[n];
+    
+    int a = elem_sizeof(n++);
+    int b = array_sizeof(arr);
+    
+    printf("a = %d\n", a);
+    printf("b = %d\n", a);
 
-    int ar2[sizeof ar];
-
-    std::cout << "sizeof pr = " << sizeof(ar2) << std::endl;
-
-    int num;
-
-    std::cout << "input num:";
-    std::cin >> num;
-
-    int ar3[num];
-
-    std::cout << "sizeof pr = " << sizeof(ar3) << std::endl;
+    return 0;
 }
 

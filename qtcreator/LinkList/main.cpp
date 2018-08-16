@@ -70,6 +70,117 @@ void ReverseLinklist(LinkNode * &list) {
     list = prev;
 }
 
+// merge两个链表，递归方式
+LinkNode *MergeRecursive(LinkNode *left, LinkNode *right) {
+    if (left == nullptr) {
+        return right;
+    }
+    if (right == nullptr) {
+        return left;
+    }
+    if (left->_data >= right->_data) {
+        right->_next = MergeRecursive(right->_next, left);
+        return right;
+    } else {
+        left->_next = MergeRecursive(left->_next, right);
+        return left;
+    }
+}
+
+// merge两个链表，遍历方式
+LinkNode *MergeLinklist(LinkNode *left, LinkNode *right) {
+    LinkNode *ret = nullptr, *cur = nullptr;
+
+    while (left && right) {
+        if (left->_data <= right->_data) {
+            if (!cur) {
+                cur = ret = left;
+            } else {
+                cur->_next = left;
+                cur = cur->_next;
+            }
+            left = left->_next;
+
+        } else {
+            if (!cur) {
+                cur = ret = right;
+            } else {
+                cur->_next = right;
+                cur = cur->_next;
+            }
+            right = right->_next;
+        }
+    }
+
+    if (left) {
+        if (!cur) {
+            ret = left;
+        } else {
+            cur->_next = left;
+        }
+    }
+
+    if (right) {
+        if (!cur) {
+            ret = right;
+        } else {
+            cur->_next = right;
+        }
+    }
+
+    return ret;
+}
+
+LinkNode* Clone(LinkNode* pHead) {
+        if (!pHead) {
+            return nullptr;
+        }
+
+        LinkNode* cur = pHead;
+        LinkNode* ret = nullptr;
+        while (cur) { // 拷贝cur
+            // 分配失败直接抛异常
+            LinkNode* node = new LinkNode(cur->_data);
+            // 把node插入到cur后面
+            node->_next = cur->_next;
+            cur->_next = node;
+
+            cur = node->_next;
+        }
+
+        // 拷贝random
+        cur = pHead;
+        while (cur) {  // cur不空，必有cur->next != nullptr
+            LinkNode* cur_next = cur->_next;
+
+            //if (cur->random) {
+            //    cur_next->random = cur->random->next;
+            //}
+
+            cur = cur_next->_next;
+        }
+
+        // 分裂两个链表
+        cur = pHead;
+        LinkNode* ret_cur = nullptr;
+        if (cur) {
+            ret = cur->_next;
+            ret_cur = ret;
+        }
+
+        while (cur && ret_cur) {
+            cur->_next = ret_cur->_next;
+            if (cur->_next) {
+                ret_cur->_next = cur->_next->_next;
+            }
+
+            cur = cur->_next;
+            ret_cur = ret_cur->_next;
+        }
+
+        return ret;
+    }
+
 int main()
 {
     LinkNode *listleft = nullptr;
@@ -91,5 +202,12 @@ int main()
 
     ShowLinklist(listleft);
     ShowLinklist(listright);
+
+    std::cout << "after clone:" << std::endl;
+    ShowLinklist(Clone(listleft));
+    ShowLinklist(listleft);
+
+    //ShowLinklist(MergeRecursive(listleft, listright));
+    //ShowLinklist(MergeLinklist(listleft, listright));
     return 0;
 }

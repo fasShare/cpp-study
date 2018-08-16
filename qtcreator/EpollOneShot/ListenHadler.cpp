@@ -42,6 +42,8 @@ AcceptAgain:
         }
     }
 
+    Socket::SetTcpNodelay(ret);
+
     std::shared_ptr<PollerEvent> client = std::make_shared<PollerEvent>(ret, kReadEvent);
     if (!client) {
         ::close(ret);

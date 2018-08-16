@@ -5,11 +5,17 @@ CONFIG -= qt
 
 LIBS += -lpthread
 
-SOURCES += main.cpp \
+SOURCES += \
     Epoll.cpp \
     Timestamp.cpp \
     Socket.cpp \
-    NetAddress.cpp
+    NetAddress.cpp \
+    Condition.cpp \
+    EventLoop.cpp \
+    ListenHadler.cpp \
+    ClientHandler.cpp \
+    Buffer.cpp \
+    echo.cpp
 
 HEADERS += \
     Epoll.h \
@@ -18,4 +24,12 @@ HEADERS += \
     PollerEvent.h \
     Socket.h \
     NetAddress.h \
-    main_copy.cpp1
+    SigIgnore.h \
+    MutexLocker.h \
+    Mutex.h \
+    Condition.h \
+    EventLoop.h \
+    Handler.h \
+    ListenHadler.h \
+    ClientHandler.h \
+    Buffer.h

@@ -2,6 +2,9 @@
 #include <string.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/tcp.h>
 
 #include <Socket.h>
 #include <Log.h>
@@ -86,4 +89,12 @@ int moxie::Socket::Accept(int sock, bool noblockingexec) {
     return ret;
 }
 
+bool moxie::Socket::SetTcpNodelay(int sock) {
+    int enable = 1;
+    if (setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, (void*)&enable, sizeof(enable)) < 0) {
+        LOGGER_SYSERR("setsockopt error : " << ::strerror(errno));
+        return false;
+    }
+    return true;
+}
 
