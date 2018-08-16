@@ -82,7 +82,7 @@ void moxie::EventLoop::Loop() {
                 return;
             }
         }
-
+        // reset cur, otherwise the event was delete in process will longer survival time.
         std::shared_ptr<PollerEvent> cur = nullptr;
         EventContext *pcontext = nullptr;
         struct epoll_event *pet = nullptr;
