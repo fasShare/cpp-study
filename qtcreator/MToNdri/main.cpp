@@ -19,6 +19,7 @@ int main() {
                           '4', '5', '6', '7',
                           '8', '9', 'A', 'B',
                           'C', 'D', 'E', 'F'};
+
     int dri = abs(M);
     while (dri != 0) {
         nums.push(chars[dri % N]);
@@ -33,6 +34,7 @@ int main() {
         std::cout << nums.top();
         nums.pop();
     }
+
     std::cout << std::endl;
     return 0;
 }
